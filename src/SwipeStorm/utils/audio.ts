@@ -213,66 +213,9 @@ const LOUNGE_B = {
 
 const LOUNGE = [LOUNGE_A, LOUNGE_B];
 
-let ambientStop: (() => void) | null = null;
-export function startAmbient() {
-  stopAmbient();
-  let alive = true;
-  const c = ac();
-  let phraseIdx = Math.floor(Math.random() * LOUNGE.length);
-  let nextTimer: number | null = null;
+// No BGM. Dating apps are silent; the silence + UI sounds IS the parody.
+export function startAmbient() { /* intentional no-op */ }
+export function stopAmbient()  { /* intentional no-op */ }
 
-  const playPhrase = () => {
-    if (!alive) return;
-    const phrase = LOUNGE[phraseIdx];
-    phraseIdx = (phraseIdx + 1) % LOUNGE.length;
-    const beatSec = 60 / phrase.bpm;
-    const phraseSec = phrase.beats * beatSec;
-    const t0 = c.currentTime + 0.08;
-
-    // Melody — vibraphone-ish: triangle through gentle LP + soft attack
-    phrase.melody.forEach(n => {
-      try {
-        const t = t0 + n.beat * beatSec;
-        const o = c.createOscillator();
-        o.type = 'triangle';
-        o.frequency.value = nHz(n.midi);
-        const lp = c.createBiquadFilter();
-        lp.type = 'lowpass'; lp.frequency.value = 2400;
-        const g = c.createGain();
-        const peak = n.gain ?? 0.055;
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(peak, t + 0.020);
-        g.gain.setValueAtTime(peak, t + n.dur * beatSec * 0.6);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + n.dur * beatSec);
-        o.connect(lp).connect(g).connect(c.destination);
-        o.start(t); o.stop(t + n.dur * beatSec + 0.05);
-      } catch { /* ignore */ }
-    });
-    // Walking bass — sine + low-pass
-    phrase.bass.forEach(n => {
-      try {
-        const t = t0 + n.beat * beatSec;
-        const o = c.createOscillator();
-        o.type = 'sine';
-        o.frequency.value = nHz(n.midi);
-        const g = c.createGain();
-        const peak = n.gain ?? 0.07;
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(peak, t + 0.015);
-        g.gain.setValueAtTime(peak, t + n.dur * beatSec * 0.6);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + n.dur * beatSec);
-        o.connect(g).connect(c.destination);
-        o.start(t); o.stop(t + n.dur * beatSec + 0.05);
-      } catch { /* ignore */ }
-    });
-
-    const breathSec = 2.5 + Math.random() * 2;
-    nextTimer = window.setTimeout(playPhrase, (phraseSec + breathSec) * 1000);
-  };
-  playPhrase();
-  ambientStop = () => { alive = false; if (nextTimer !== null) clearTimeout(nextTimer); };
-}
-export function stopAmbient() {
-  if (ambientStop) ambientStop();
-  ambientStop = null;
-}
+// Keep the lounge phrase data unused but defined to avoid shifting other imports.
+void LOUNGE; void nHz;
