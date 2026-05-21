@@ -16,8 +16,8 @@ export default function SwipeStorm() {
     onPointerDown, onPointerMove, onPointerUp, onPointerCancel,
   } = useSwipeStorm();
 
-  const { isInAigram, submitScore, fetchGlobalLeaderboard, fetchFriendsLeaderboard } =
-    useGameScore('swipe-storm');
+  const { isInAigram, submitScore, fetchLeaderboard } =
+    useGameScore();
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   useEffect(() => {
@@ -135,8 +135,7 @@ export default function SwipeStorm() {
         <Leaderboard
           gameName="Swipe Storm"
           onClose={() => setShowLeaderboard(false)}
-          fetchGlobal={fetchGlobalLeaderboard}
-          fetchFriends={fetchFriendsLeaderboard}
+          fetch={fetchLeaderboard}
           isInAigram={isInAigram}
         />
       )}
