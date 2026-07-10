@@ -32,14 +32,18 @@ export function StatusBar() {
   );
 }
 
-export function AppBar() {
+interface AppBarProps {
+  logo?: string;
+}
+
+export function AppBar({ logo = 'tinder*' }: AppBarProps) {
   return (
     <div className="ss-appbar" aria-hidden>
       <div className="ss-appbar__icon">
         {/* Gear / settings */}
         <svg viewBox="0 0 24 24"><path d="M19.4 12.9c.1-.3.1-.6.1-.9s0-.6-.1-.9l2-1.6-2-3.4-2.4 1c-.5-.4-1-.7-1.6-.9L15 3h-4l-.4 2.2c-.6.2-1.1.5-1.6.9l-2.4-1-2 3.4 2 1.6c-.1.3-.1.6-.1.9s0 .6.1.9l-2 1.6 2 3.4 2.4-1c.5.4 1 .7 1.6.9L11 21h4l.4-2.2c.6-.2 1.1-.5 1.6-.9l2.4 1 2-3.4-2-1.6zM13 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg>
       </div>
-      <div className="ss-appbar__logo">tinder*</div>
+      <div className="ss-appbar__logo">{logo}</div>
       <div className="ss-appbar__icons">
         <div className="ss-appbar__icon">
           {/* Filter sliders */}

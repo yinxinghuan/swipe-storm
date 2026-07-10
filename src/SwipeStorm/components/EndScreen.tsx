@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { t } from '../i18n';
 import type { Stats } from '../types';
+import { activeCartridge } from '../cartridge';
 
 interface Props {
   stats: Stats;
@@ -9,39 +10,13 @@ interface Props {
   onOpenLeaderboard: () => void;
 }
 
-// Tinder-fail flavor — different copy for the two end reasons.
-const CATFISH_HEADLINES = [
-  'Account suspended.',
-  'You\'ve been catfished.',
-  'Fraud alert.',
-  'Yikes.',
-];
-const CATFISH_SUBS = [
-  'Your card was just charged $4,200.',
-  'The "model in Moscow" stole your data.',
-  'They were a bot the whole time.',
-  'You sent crypto. They sent nothing.',
-];
-const LIVES_HEADLINES = [
-  'Out of likes.',
-  'Swipe fatigue.',
-  'Maybe try IRL.',
-  'You picked nothing.',
-];
-const LIVES_SUBS = [
-  'You missed every match. Premium subscribers swipe faster.',
-  'The algorithm has lost faith.',
-  'Three real ones got away.',
-  'Get back in there, champ.',
-];
-
 function pickOne<T>(xs: T[]): T { return xs[Math.floor(Math.random() * xs.length)]; }
 
 export function EndScreen({ stats, best, onAgain, onOpenLeaderboard }: Props) {
   const catfish = stats.endReason === 'catfish';
   const flavor = useMemo(() => ({
-    headline: pickOne(catfish ? CATFISH_HEADLINES : LIVES_HEADLINES),
-    sub:      pickOne(catfish ? CATFISH_SUBS      : LIVES_SUBS),
+    headline: pickOne(catfish ? activeCartridge.end.trapHeadlines : activeCartridge.end.livesHeadlines),
+    sub:      pickOne(catfish ? activeCartridge.end.trapSubs      : activeCartridge.end.livesSubs),
   }), [catfish]);
 
   return (
@@ -70,15 +45,15 @@ export function EndScreen({ stats, best, onAgain, onOpenLeaderboard }: Props) {
             <div className="ss-stats__value">{best}</div>
           </div>
           <div className="ss-stats__cell">
-            <div className="ss-stats__label">{t('matched')}</div>
+            <div className="ss-stats__label">{activeCartridge.statsLabels.rightGood}</div>
             <div className="ss-stats__value">{stats.matchedReal}</div>
           </div>
           <div className="ss-stats__cell">
-            <div className="ss-stats__label">{t('dodged')}</div>
+            <div className="ss-stats__label">{activeCartridge.statsLabels.leftGood}</div>
             <div className="ss-stats__value">{stats.dodgedReds}</div>
           </div>
           <div className="ss-stats__cell">
-            <div className="ss-stats__label">{t('catfish_dodged')}</div>
+            <div className="ss-stats__label">{activeCartridge.statsLabels.trapDodged}</div>
             <div className="ss-stats__value">{stats.catfishCaught}</div>
           </div>
           <div className="ss-stats__cell">
@@ -86,7 +61,7 @@ export function EndScreen({ stats, best, onAgain, onOpenLeaderboard }: Props) {
             <div className="ss-stats__value">×{stats.maxCombo}</div>
           </div>
           <div className="ss-stats__cell">
-            <div className="ss-stats__label">Swiped</div>
+            <div className="ss-stats__label">{activeCartridge.statsLabels.swiped}</div>
             <div className="ss-stats__value">{stats.totalSwiped}</div>
           </div>
         </div>

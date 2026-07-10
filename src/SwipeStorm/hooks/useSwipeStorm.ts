@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Profile, Screen, Stats, SwipeOutcome } from '../types';
 import { makeProfile } from '../data/profiles';
+import { activeCartridge } from '../cartridge';
 import {
   sfxCatfish, sfxDodgeRed, sfxExpire, sfxMatch, sfxRegret,
   sfxRunEnd, sfxSoulmate, sfxSwipeStart, sfxSwipeCommit,
   startAmbient, stopAmbient, unlockAudio,
 } from '../utils/audio';
 
-const BEST_KEY = 'swipe-storm:best';
+const BEST_KEY = activeCartridge.bestKey;
 const LIVES = 3;
 const STACK_SIZE = 3;        // visible cards (top one is active)
 const SWIPE_COMMIT_PX = 90;   // px of horizontal drag to commit
@@ -99,27 +100,27 @@ export function useSwipeStorm() {
         out.comboInc = true;
         matchedRealRef.current += 1;
         sfxMatch();
-        out.banner = 'MATCH!';
-        out.bannerColor = '#3aa84a';
+        out.banner = activeCartridge.feedback.rightSuccess;
+        out.bannerColor = activeCartridge.visual.right;
       } else if (profile.kind === 'soulmate') {
         out.delta = 100;
         out.comboInc = true;
         matchedRealRef.current += 1;
         sfxSoulmate();
-        out.banner = '✨ SOULMATE ✨';
-        out.bannerColor = '#ffd24a';
+        out.banner = activeCartridge.feedback.rare;
+        out.bannerColor = activeCartridge.visual.rare;
       } else if (profile.kind === 'red') {
         out.delta = -10;
         out.comboBreak = true;
         sfxRegret();
-        out.banner = 'REGRET';
-        out.bannerColor = '#b81818';
+        out.banner = activeCartridge.feedback.mistake;
+        out.bannerColor = activeCartridge.visual.danger;
       } else if (profile.kind === 'catfish') {
         out.gameOver = true;
         sfxCatfish();
         endReasonRef.current = 'catfish';
-        out.banner = 'SCAMMED!';
-        out.bannerColor = '#b81818';
+        out.banner = activeCartridge.feedback.trap;
+        out.bannerColor = activeCartridge.visual.danger;
       }
     } else {
       // LEFT (NOPE)
@@ -128,20 +129,22 @@ export function useSwipeStorm() {
         out.comboInc = true;
         dodgedRedsRef.current += 1;
         sfxDodgeRed();
+        out.banner = activeCartridge.feedback.leftSuccess;
+        out.bannerColor = activeCartridge.visual.right;
       } else if (profile.kind === 'catfish') {
         out.delta = 5;
         out.comboInc = true;
         catfishCaughtRef.current += 1;
         sfxDodgeRed();
-        out.banner = 'SMART!';
-        out.bannerColor = '#3aa84a';
+        out.banner = activeCartridge.feedback.leftSuccess;
+        out.bannerColor = activeCartridge.visual.right;
       } else if (profile.kind === 'green' || profile.kind === 'soulmate') {
         out.delta = 0;
         out.comboBreak = true;
         greenMissedRef.current += 1;
         sfxRegret();
-        out.banner = 'MISSED…';
-        out.bannerColor = '#aa6633';
+        out.banner = activeCartridge.feedback.mistake;
+        out.bannerColor = activeCartridge.visual.danger;
       }
     }
     return out;
@@ -227,6 +230,7 @@ export function useSwipeStorm() {
     setBanner(null);
     setHasInteracted(false);
     topUp();
+    refresh();
     setScreen('playing');
     screenRef.current = 'playing';
     unlockAudio();
@@ -334,7 +338,7 @@ export function useSwipeStorm() {
                 setLives(livesRef.current);
                 greenMissedRef.current += 1;
                 sfxExpire();
-                setBanner({ text: 'TIME OUT — 1 LIFE', color: '#b81818', key: performance.now() });
+                setBanner({ text: activeCartridge.feedback.timeout, color: activeCartridge.visual.danger, key: performance.now() });
                 if (livesRef.current <= 0) {
                   endReasonRef.current = 'lives';
                   endRun();

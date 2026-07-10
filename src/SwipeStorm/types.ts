@@ -26,10 +26,17 @@ export interface Profile {
   uid: number;
   kind: ProfileKind;
   name: string;
-  age: number;
+  age?: number;
   bio: string;
   tags: string[];
-  avatar: AvatarParts;
+  avatar?: AvatarParts;
+  subtitle?: string;
+  visual?: {
+    renderer: 'profile' | 'document' | 'object-card';
+    icon?: string;
+    accent?: string;
+    seal?: string;
+  };
 }
 
 export interface Stats {

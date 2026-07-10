@@ -1,5 +1,6 @@
 import type { Profile, ProfileKind } from '../types';
 import { randomAvatar } from './avatar';
+import { activeCartridge } from '../cartridge';
 
 // ─── Names ────────────────────────────────────────────────────────────────
 
@@ -101,6 +102,26 @@ let nextUid = 1;
 
 /** Generate a fresh random profile. */
 export function makeProfile(): Profile {
+  if (activeCartridge.items?.length) {
+    const kind = weightedKind(Math.random);
+    const pool = activeCartridge.items.filter(item => item.kind === kind);
+    const item = (pool.length ? pool : activeCartridge.items)[Math.floor(Math.random() * (pool.length ? pool.length : activeCartridge.items.length))];
+    return {
+      uid: nextUid++,
+      kind: item.kind,
+      name: item.title,
+      subtitle: item.subtitle,
+      bio: item.body,
+      tags: item.tags.slice(),
+      visual: {
+        renderer: activeCartridge.visual.renderer,
+        icon: item.icon,
+        accent: item.accent,
+        seal: item.seal,
+      },
+    };
+  }
+
   const kind = weightedKind(Math.random);
   // Pick from bios matching the kind
   const pool = BIOS.filter(b => b.kind === kind);

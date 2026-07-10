@@ -1,5 +1,7 @@
+import type { CSSProperties } from 'react';
 import type { CardState } from '../hooks/useSwipeStorm';
 import { Avatar } from './Avatar';
+import { activeCartridge } from '../cartridge';
 
 interface Props {
   card: CardState;
@@ -12,6 +14,7 @@ const SWIPE_COMMIT_PX = 90;
 
 export function ProfileCard({ card, depth, isActive }: Props) {
   const { profile, dragX, dragY, phase } = card;
+  const renderer = profile.visual?.renderer ?? 'profile';
 
   // Active card responds to drag; cards behind it stay slightly scaled and lower
   const rotateDeg = isActive ? dragX * 0.06 : 0;       // 90px ⇒ ~5.4°
@@ -41,17 +44,43 @@ export function ProfileCard({ card, depth, isActive }: Props) {
         transition: transitionStyle,
       }}
     >
-      {/* The portrait fills the upper portion */}
-      <div className="ss-card__photo">
-        <Avatar parts={profile.avatar} />
-        {/* Gradient overlay for legibility of name/age */}
-        <div className="ss-card__photo-overlay" />
-        {/* Name + age */}
-        <div className="ss-card__nameplate">
-          <span className="ss-card__name">{profile.name}</span>
-          <span className="ss-card__age">{profile.age}</span>
+      {renderer === 'object-card' ? (
+        <div className="ss-card__object" style={{ '--card-accent': profile.visual?.accent } as CSSProperties & Record<string, string | undefined>}>
+          <div className="ss-card__object-badge">{profile.visual?.seal ?? 'item'}</div>
+          <div className="ss-card__object-symbol">{profile.visual?.icon ?? 'ITEM'}</div>
+          <div className="ss-card__object-title">{profile.name}</div>
+          {profile.subtitle && <div className="ss-card__object-subtitle">{profile.subtitle}</div>}
+          <div className="ss-card__object-bin" aria-hidden>
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
-      </div>
+      ) : renderer === 'document' ? (
+        <div className="ss-card__document" style={{ '--card-accent': profile.visual?.accent } as CSSProperties & Record<string, string | undefined>}>
+          <div className="ss-card__doc-top">
+            <div className="ss-card__doc-icon">{profile.visual?.icon ?? 'FILE'}</div>
+            <div className="ss-card__doc-seal">{profile.visual?.seal ?? 'review'}</div>
+          </div>
+          <div className="ss-card__doc-rule" />
+          <div className="ss-card__doc-title">{profile.name}</div>
+          {profile.subtitle && <div className="ss-card__doc-subtitle">{profile.subtitle}</div>}
+          <div className="ss-card__doc-lines" aria-hidden>
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+      ) : (
+        <div className="ss-card__photo">
+          {profile.avatar && <Avatar parts={profile.avatar} />}
+          <div className="ss-card__photo-overlay" />
+          <div className="ss-card__nameplate">
+            <span className="ss-card__name">{profile.name}</span>
+            {profile.age != null && <span className="ss-card__age">{profile.age}</span>}
+          </div>
+        </div>
+      )}
 
       {/* Bio + tags */}
       <div className="ss-card__body">
@@ -68,8 +97,8 @@ export function ProfileCard({ card, depth, isActive }: Props) {
       {/* LIKE / NOPE stamps that fade in with drag */}
       {isActive && (
         <>
-          <div className="ss-stamp ss-stamp--like" style={{ opacity: likeOpacity }}>LIKE</div>
-          <div className="ss-stamp ss-stamp--nope" style={{ opacity: nopeOpacity }}>NOPE</div>
+          <div className="ss-stamp ss-stamp--like" style={{ opacity: likeOpacity }}>{activeCartridge.copy.rightLabel}</div>
+          <div className="ss-stamp ss-stamp--nope" style={{ opacity: nopeOpacity }}>{activeCartridge.copy.leftLabel}</div>
         </>
       )}
     </div>
