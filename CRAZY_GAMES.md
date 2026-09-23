@@ -21,6 +21,10 @@ Crazy Games requires that guests can play and that the game does not add its own
 
 The default `npm run build` path is unchanged for GitHub Pages and any AlterU/Aigram embed.
 
+The Pages workflow publishes this guest build next to the root site, without replacing it:
+
+https://yinxinghuan.github.io/swipe-storm/crazygames/
+
 Progress sync through the Crazy Games SDK Data module is not wired up. Local best score is enough for this version.
 
 ## Build the upload package
