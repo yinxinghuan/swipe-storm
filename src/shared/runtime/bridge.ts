@@ -1,3 +1,5 @@
+import { isCrazyGamesBuild } from './deployTarget';
+
 // Aigram runtime bridge — the only file in this workspace that knows how the
 // game iframe talks to the Aigram host.
 //
@@ -25,8 +27,13 @@ export const api_origin: string | null = _rawOrigin
 /** Current player's telegram_id, supplied by Aigram on iframe launch. */
 export const telegramId: string | null = _params.get('telegram_id');
 
-/** True when both `api_origin` and `telegram_id` are present. */
-export const isInAigram: boolean = !!api_origin && !!telegramId;
+/**
+ * True when both `api_origin` and `telegram_id` are present.
+ * The Crazy Games build never enables the Aigram host, so guests are not
+ * sent through an AlterU login or save gate.
+ */
+export const isInAigram: boolean =
+  !isCrazyGamesBuild && !!api_origin && !!telegramId;
 
 // ─── Base64 helpers ───────────────────────────────────────────────────────
 
