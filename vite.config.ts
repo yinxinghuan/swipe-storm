@@ -8,7 +8,16 @@ export default defineConfig(({ mode }) => ({
   base: './',
   plugins: [react()],
   resolve: {
-    alias: { '@shared': path.resolve(__dirname, 'src/shared') },
+    alias: {
+      '@shared': path.resolve(__dirname, 'src/shared'),
+      // Host chrome styles stay out of the Crazy Games bundle.
+      '@swipe-host-styles': path.resolve(
+        __dirname,
+        mode === 'crazygames'
+          ? 'src/SwipeStorm/brand/empty.less'
+          : 'src/SwipeStorm/brand/host.less',
+      ),
+    },
   },
   css: {
     preprocessorOptions: {

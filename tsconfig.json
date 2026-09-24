@@ -17,7 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@swipe-host-styles": ["src/SwipeStorm/brand/host.less"]
     }
   },
   "include": ["src"],

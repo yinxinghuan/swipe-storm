@@ -1,6 +1,6 @@
 // Copy the Crazy Games Vite output into artifacts/ and zip it with index.html
 // at the archive root (Crazy Games upload layout).
-import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,6 +12,49 @@ const zipPath = path.join(root, 'artifacts', 'swipe-storm-crazygames.zip');
 
 if (!existsSync(path.join(dist, 'index.html'))) {
   console.error('dist-crazygames/index.html is missing. Run vite build --mode crazygames first.');
+  process.exit(1);
+}
+
+const posterSrc = path.join(root, 'crazygames', 'poster.png');
+if (!existsSync(posterSrc)) {
+  console.error('crazygames/poster.png is missing.');
+  process.exit(1);
+}
+cpSync(posterSrc, path.join(dist, 'poster.png'));
+
+const banned = [
+  /tinder/i,
+  /arcana admissions/i,
+  /sort line/i,
+  /wizard-academy/i,
+  /recycle-sort/i,
+  /apps\.apple\.com/i,
+  /alteru/i,
+  /ss-watermark/,
+  /NOPE/,
+];
+const assetDir = path.join(dist, 'assets');
+const bundled = readdirSync(assetDir)
+  .filter((name) => name.endsWith('.js'))
+  .map((name) => readFileSync(path.join(assetDir, name), 'utf8'))
+  .join('\n');
+const css = readdirSync(assetDir)
+  .filter((name) => name.endsWith('.css'))
+  .map((name) => readFileSync(path.join(assetDir, name), 'utf8'))
+  .join('\n');
+const cssBanned = [
+  /tinder/i,
+  /pacifico/i,
+  /brush script/i,
+  /wizard-academy/i,
+  /recycle-sort/i,
+  /alteru/i,
+  /ss-watermark/,
+];
+const hit = banned.find((pattern) => pattern.test(bundled))
+  || cssBanned.find((pattern) => pattern.test(css));
+if (hit) {
+  console.error(`Crazy Games bundle still contains banned branding: ${hit}`);
   process.exit(1);
 }
 
