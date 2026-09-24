@@ -15,8 +15,8 @@ const dict: Record<Locale, Record<string, string>> = {
     dodged: '避开红旗',
     catfish_dodged: '识破诈骗',
     max_combo: '最大连击',
-    tut_swipe_left: '左滑 NOPE',
-    tut_swipe_right: '右滑 LIKE',
+    tut_swipe_left: '左滑',
+    tut_swipe_right: '右滑',
   },
   en: {
     title: 'SWIPE STORM',
@@ -32,8 +32,8 @@ const dict: Record<Locale, Record<string, string>> = {
     dodged: 'Red flags dodged',
     catfish_dodged: 'Catfish dodged',
     max_combo: 'Max combo',
-    tut_swipe_left: 'SWIPE LEFT  NOPE',
-    tut_swipe_right: 'SWIPE RIGHT  LIKE',
+    tut_swipe_left: 'SWIPE LEFT',
+    tut_swipe_right: 'SWIPE RIGHT',
   },
 };
 

@@ -21,6 +21,16 @@ Crazy Games requires that guests can play and that the game does not add its own
 
 The default `npm run build` path is unchanged for GitHub Pages and any AlterU/Aigram embed.
 
+## Guest presentation
+
+The Crazy Games bundle is a single Swipe Storm game:
+
+- Header wordmark is **Swipe Storm** (Inter, with a storm mark). It does not use a script dating-app logo.
+- Play controls are two labeled keys, **FLAG** and **KEEP**. Swipe left and swipe right still play the same way.
+- The AlterU footer mark is not rendered, and that asset is not included in the guest JavaScript.
+- `?theme=` does not switch to Arcana Admissions, Sort Line, or a generated skin. Those cartridges are omitted from this bundle.
+- `crazygames/poster.png` is the upload poster. `npm run build:crazygames` copies it into the zip.
+
 The Pages workflow publishes this guest build next to the root site, without replacing it:
 
 https://yinxinghuan.github.io/swipe-storm/crazygames/

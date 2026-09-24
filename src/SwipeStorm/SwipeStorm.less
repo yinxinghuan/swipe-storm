@@ -29,111 +29,6 @@
 
 .ss-bg { display: none; } // unused — root carries the gradient now
 
-// ─── iOS-style status bar + Tinder-style app header ─────────────────────
-
-.ss-statusbar {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 36px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 0 22px 6px;
-  font-family: -apple-system, 'SF Pro', system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: @text;
-  z-index: 8;
-  pointer-events: none;
-  &__time { letter-spacing: -0.01em; }
-  &__icons {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    svg { width: 16px; height: 12px; fill: @text; }
-  }
-  // Fake iOS notch / dynamic island in the middle
-  &::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 96px;
-    height: 22px;
-    background: #000;
-    border-radius: 12px;
-  }
-}
-
-.ss-appbar {
-  position: absolute;
-  top: 36px; left: 0; right: 0;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  z-index: 7;
-  pointer-events: none;
-
-  &__logo {
-    font-family: 'Pacifico', 'Brush Script MT', 'Playfair Display', cursive;
-    font-size: 34px;
-    line-height: 1;
-    background: linear-gradient(135deg, @coral 0%, @orange 100%);
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-    letter-spacing: -0.02em;
-    font-style: italic;
-    font-weight: 600;
-  }
-  &__icons {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-  &__icon {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    svg { width: 16px; height: 16px; fill: @text; }
-  }
-}
-.ss-root--wizard-academy {
-  .ss-appbar__logo {
-    max-width: 260px;
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 900;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: #5e2036;
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-  }
-}
-.ss-root--recycle-sort {
-  .ss-appbar__logo {
-    max-width: 220px;
-    font-family: -apple-system, 'SF Pro', 'Inter', system-ui, sans-serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 950;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #1f5e49;
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-  }
-}
-
 // ─── Card deck ──────────────────────────────────────────────────────────
 
 .ss-deck {
@@ -489,55 +384,6 @@
   transform: rotate(15deg);
 }
 
-// ─── Action button row (Tinder bottom bar) ──────────────────────────────
-
-.ss-buttons-row {
-  position: absolute;
-  bottom: 28px;
-  left: 0; right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 22px;
-  z-index: 6;
-  pointer-events: none;
-
-  > * { pointer-events: auto; }
-}
-.ss-action {
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  padding: 0;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.10);
-  transition: transform 100ms ease, box-shadow 100ms ease;
-  border: 0;
-
-  &:active {
-    transform: scale(0.92);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
-  }
-
-  &--small {
-    width: 46px; height: 46px;
-    svg { width: 20px; height: 20px; }
-  }
-  &--big {
-    width: 64px; height: 64px;
-    svg { width: 28px; height: 28px; }
-  }
-
-  &--nope    svg { fill: var(--ss-left, @coral); }
-  &--like    svg { fill: var(--ss-right, @green); }
-  &--rewind  svg { fill: #ffc000; }
-  &--super   svg { fill: #2196f3; }
-  &--boost   svg { fill: #b85aff; }
-}
-
 // ─── Tutorial overlay (subtle phone-app hint) ───────────────────────────
 
 .ss-tutorial {
@@ -863,17 +709,129 @@
   line-height: 1.5;
 }
 
-// ─── Watermark ──────────────────────────────────────────────────────────
+// ─── Crazy Games guest chrome ───────────────────────────────────────────
+// Original Swipe Storm header and a two-key deck. Not the phone-status
+// parody header, and not a row of round rewind / nope / star / like / boost keys.
 
-.ss-watermark {
+.ss-root--guest {
+  font-family: 'Inter', system-ui, sans-serif;
+
+  .ss-deck {
+    top: 96px;
+    bottom: 118px;
+  }
+  .ss-hud { top: 78px; }
+  .ss-hud__score { color: #1d1840; }
+  .ss-card { border-radius: 22px; }
+  .ss-card__age {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .ss-stamp {
+    border-radius: 999px;
+    font-size: 18px;
+    letter-spacing: 0.16em;
+    padding: 8px 16px;
+    background: rgba(18, 16, 36, 0.78);
+    border-width: 2px;
+  }
+  .ss-stamp--like,
+  .ss-stamp--nope { transform: none; top: 22px; }
+  .ss-tutorial { padding-bottom: 128px; }
+  .ss-tutorial__row {
+    background: rgba(29, 24, 64, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .ss-btn--primary {
+    background: #1d1840;
+    box-shadow: 0 4px 14px rgba(29, 24, 64, 0.28);
+  }
+  .ss-end-headline {
+    background: none;
+    color: #1d1840;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+  }
+  .ss-new-best { color: #0e97b5; }
+  .ss-scam-alert__icon svg { fill: #c3283c; }
+}
+
+.ss-guestbar {
   position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: auto;
-  opacity: 0.40;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 0;
+  z-index: 8;
   pointer-events: none;
-  z-index: 4;
-  filter: brightness(0.4);
+
+  &__mark {
+    width: 44px;
+    height: 44px;
+    flex: none;
+    svg { width: 44px; height: 44px; display: block; }
+  }
+  &__logo {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.04em;
+    color: #1d1840;
+    line-height: 1;
+    span { color: #0e97b5; }
+  }
+  &__tag {
+    margin-top: 4px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5c5678;
+  }
+}
+
+.ss-guest-dock {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 10px;
+  z-index: 6;
+  padding: 8px;
+  border-radius: 22px;
+  background: #1d1840;
+  box-shadow: 0 12px 28px rgba(29, 24, 64, 0.28);
+}
+
+.ss-guest-act {
+  flex: 1;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 100ms ease;
+
+  svg { width: 22px; height: 22px; flex: none; }
+  &:active { transform: scale(0.97); }
+
+  &--flag { background: #ff4d2e; }
+  &--keep { background: #0e97b5; }
 }

@@ -123,7 +123,7 @@ export function useSwipeStorm() {
         out.bannerColor = activeCartridge.visual.danger;
       }
     } else {
-      // LEFT (NOPE)
+      // LEFT (flag / reject)
       if (profile.kind === 'red') {
         out.delta = 5;
         out.comboInc = true;
